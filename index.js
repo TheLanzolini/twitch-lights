@@ -24,7 +24,8 @@ const validCommands = [
   '!brightness',
   '!lightsrandom',
   '!lightson',
-  '!lightsoff'
+  '!lightsoff',
+  '!strobe'
 ]
 
 const setLightState = (state) => {
@@ -98,5 +99,17 @@ CLIENT.on('chat', (channel, user, message, self) => {
       QUEUE.push(`@${user.username} Lights turned off!`)
     })
   }
+  // if(command === '!strobe') {
+  //   const state_1 = lightState.create().transitionTime(10).rgb(255, 0, 0)
+  //   const state_2 = lightState.create().transitionTime(10).rgb(0, 255, 0)
+  //   const state_3 = lightState.create().transitionTime(10).rgb(0, 0, 255)
+  //   setLightState(state_1)
+  //   setTimeout(() => {
+  //     setLightState(state_2)
+  //   }, 2000)
+  //   setTimeout(() => {
+  //     setLightState(state_3)
+  //   }, 4000)
+  // }
 
 })
