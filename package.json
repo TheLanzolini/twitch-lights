@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-hue-api": "^2.4.2",
+    "tmi.js": "^1.2.1"
+  }
+}

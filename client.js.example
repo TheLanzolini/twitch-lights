@@ -1,0 +1,20 @@
+const tmi = require('tmi.js')
+
+const USERNAME = ''
+const PASSWORD = ''
+
+const CLIENT = new tmi.client({
+  options: {
+    debug: true
+  },
+  connection: {
+    reconnect: true
+  },
+  identity: {
+    username: USERNAME,
+    password: PASSWORD
+  },
+  channels: ['#lanzo']
+})
+
+module.exports = CLIENT
