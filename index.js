@@ -22,7 +22,9 @@ const validCommands = [
   '!lights',
   '!light',
   '!brightness',
-  '!lightsrandom'
+  '!lightsrandom',
+  '!lightson',
+  '!lightsoff'
 ]
 
 const setLightState = (state) => {
@@ -44,9 +46,7 @@ CLIENT.on('chat', (channel, user, message, self) => {
   const command = split[0]
   const argument = split[1]
   const isValidCommand = validCommands.includes(command)
-  console.log(isValidCommand)
   if (!isValidCommand) {
-    console.log('not valid command')
     return
   }
   const isValidColor = !!colors[argument]
@@ -82,6 +82,20 @@ CLIENT.on('chat', (channel, user, message, self) => {
     const state = lightState.create().on().rgb(r, g, b)
     setLightState(state).then(() => {
       QUEUE.push(`@${user.username} Setting lights to a random color! Got: (${r}, ${g}, ${b})`)
+    })
+  }
+
+  if(command === '!lightson') {
+    const state = lightState.create().on()
+    setLightState(state).then(() => {
+      QUEUE.push(`@${user.username} Lights turned on!`)
+    })
+  }
+
+  if(command === '!lightsoff') {
+    const state = lightState.create().off()
+    setLightState(state).then(() => {
+      QUEUE.push(`@${user.username} Lights turned off!`)
     })
   }
 
