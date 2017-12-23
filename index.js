@@ -17,7 +17,7 @@ const popQueue = () => {
     CLIENT.say('#lanzo', message)
   }
 }
-let interval
+let interval, strobeInterval, strobeState = 0
 const validCommands = [
   '!lights',
   '!light',
@@ -25,8 +25,17 @@ const validCommands = [
   '!lightsrandom',
   '!lightson',
   '!lightsoff',
-  '!strobe'
+  '!rave',
+  '!stop'
 ]
+
+const switchLighting = () => {
+  const state_1 = lightState.create().transitionInstant().rgb(255, 0, 0)
+  const state_2 = lightState.create().transitionInstant().rgb(0, 255, 0)
+  const state_3 = lightState.create().transitionInstant().rgb(0, 0, 255)
+  setLightState(strobeState === 0 ? state_1 : strobeState === 1 ? state_2 : state_3)
+  strobeState = strobeState === 0 ? 1 : strobeState === 1 ? 2 : 0
+}
 
 const setLightState = (state) => {
   return API.setLightState(1, state).then(() => {
@@ -60,6 +69,7 @@ CLIENT.on('chat', (channel, user, message, self) => {
       QUEUE.push(`@${user.username} Setting lights to ${argument}.`)
     })
   }
+  clearInterval(strobeInterval)
   if ((command === '!lights' || command === '!light') && argument === undefined) {
     QUEUE.push(`@${user.username} Command use is !light(s) COLOR. with the COLOR being a valid HTML color https://www.w3schools.com/colors/colors_names.asp.`)
   }
@@ -99,17 +109,19 @@ CLIENT.on('chat', (channel, user, message, self) => {
       QUEUE.push(`@${user.username} Lights turned off!`)
     })
   }
-  // if(command === '!strobe') {
-  //   const state_1 = lightState.create().transitionTime(10).rgb(255, 0, 0)
-  //   const state_2 = lightState.create().transitionTime(10).rgb(0, 255, 0)
-  //   const state_3 = lightState.create().transitionTime(10).rgb(0, 0, 255)
-  //   setLightState(state_1)
-  //   setTimeout(() => {
-  //     setLightState(state_2)
-  //   }, 2000)
-  //   setTimeout(() => {
-  //     setLightState(state_3)
-  //   }, 4000)
-  // }
+  if(command === '!rave') {
+    QUEUE.push(`@${user.username} Starting the Light Party SwiftRage !`)
+    strobeInterval = setInterval(switchLighting, 600)
+    setTimeout(() => {
+      clearInterval(strobeInterval)
+      const state = lightState.create().on().rgb(255, 255, 255)
+      setLightState(state)
+    }, 30000)
+  }
+
+  if(command === '!stop') {
+    const state = lightState.create().on().rgb(255, 255, 255)
+    clearInterval(strobeInterval)
+  }
 
 })
