@@ -1,6 +1,8 @@
 const tmi = require('tmi.js')
 
+// put your bot username here
 const USERNAME = ''
+// put your Oauth key here (including the "oauth:" part)
 const PASSWORD = ''
 
 const CLIENT = new tmi.client({

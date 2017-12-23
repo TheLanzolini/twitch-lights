@@ -1,2 +1,3 @@
 client.js
 node_modules
+*.old
