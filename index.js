@@ -21,10 +21,10 @@ let interval, strobeInterval, strobeState = 0
 const validCommands = [
   '!lights',
   '!light',
-  '!brightness',
+  // '!brightness',
   '!lightsrandom',
   '!lightson',
-  '!lightsoff',
+  // '!lightsoff',
   '!rave',
   '!stop'
 ]
@@ -50,6 +50,20 @@ const setLightState = (state) => {
 CLIENT.connect().then((data) => {
   interval = setInterval(popQueue, 2000)
 })
+
+const startRave = () => {
+  strobeInterval = setInterval(switchLighting, 600)
+  setTimeout(() => {
+    clearInterval(strobeInterval)
+    const state = lightState.create().on().rgb(255, 255, 255)
+    setLightState(state)
+  }, 30000)
+}
+
+CLIENT.on('subscription', function (channel, username, method, message, userstate) {
+  console.log(`NEW SUB NEW SUB NEW SUB: OMG ${username} subscribed!!!!`)
+  startRave()
+});
 CLIENT.on('chat', (channel, user, message, self) => {
   if (self) return
   const split = message.split(' ')
@@ -111,12 +125,7 @@ CLIENT.on('chat', (channel, user, message, self) => {
   }
   if(command === '!rave') {
     QUEUE.push(`@${user.username} Starting the Light Party SwiftRage !`)
-    strobeInterval = setInterval(switchLighting, 600)
-    setTimeout(() => {
-      clearInterval(strobeInterval)
-      const state = lightState.create().on().rgb(255, 255, 255)
-      setLightState(state)
-    }, 30000)
+    startRave()
   }
 
   if(command === '!stop') {
